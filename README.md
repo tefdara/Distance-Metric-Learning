@@ -43,18 +43,6 @@ lowlevel:
     windowType: blackmanharris62
     silentFrames: noise
     stats: ['mean']
-
-rhythm:
-    minTempo: 40
-    maxTempo: 208
-    stats: ['mean']
-
-tonal:
-    frameSize: 4096
-    hopSize: 2048
-    windowType: blackmanharris62
-    silentFrames: noise
-    stats: ['mean']
 ```
 
 use for computing the distance metric. 
