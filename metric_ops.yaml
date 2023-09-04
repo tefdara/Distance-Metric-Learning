@@ -1,0 +1,11 @@
+n : 10
+class : 'stats'
+
+# if true, only metric specific in the weights are used
+exclusive_weights : False
+
+# -1 -> no limit
+max_files : 10
+
+weights :
+  length : 1.0

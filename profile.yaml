@@ -1,0 +1,25 @@
+analysisSampleRate: 48000.0
+outputFrames: 0
+indent: 4
+
+lowlevel:
+    frameSize: 2048
+    hopSize: 1024
+    windowType: blackmanharris62
+    silentFrames: noise
+    stats: ['mean']
+
+rhythm:
+    minTempo: 40
+    maxTempo: 208
+    stats: ['mean']
+
+tonal:
+    frameSize: 4096
+    hopSize: 2048
+    windowType: blackmanharris62
+    silentFrames: noise
+    stats: ['mean']
+
+ignoreDescriptors: ['hpcp', 'chords_histogram', 'thpcp', 'bpm_histogram', 'cov', 'icov',
+                    'chords_key', 'chords_scale', 'key_edma', 'key_krumhansl', 'key_temperley', 'melbands128', 'beats_loudness_band_ratio']
