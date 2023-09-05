@@ -64,7 +64,3 @@ weights :
 ## Contributing
 
 This is a very basic exmaple. If you find a bug or have a suggestion for improvement, please open an issue or submit a pull request on GitHub.
-
-## License
-
-This code is licensed under the GNU General Public License. See the `LICENSE` file for more information.
