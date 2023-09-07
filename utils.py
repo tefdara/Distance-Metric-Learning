@@ -68,6 +68,11 @@ async def copy_similar_to_folders(base_path, data_path, file_id, similar_files):
     target_folder = os.path.join(base_path, file_id)
     if not os.path.exists(target_folder):
         os.makedirs(target_folder)
+    
+    # create a directory for the analysis files
+    analysis_folder = os.path.join(target_folder, "analysis")
+    if not os.path.exists(analysis_folder):
+        os.makedirs(analysis_folder)
         
     # This assumes that the source directory is one level above the data_path
     source_diectory = os.path.dirname(data_path)
@@ -76,13 +81,19 @@ async def copy_similar_to_folders(base_path, data_path, file_id, similar_files):
     for sound in sound_files:
         # Assuming each sound has an associated JSON file
         source_file_path = os.path.join(source_diectory, sound)
-        print(f"Copying {source_file_path} to {target_folder}")
-        
+        source_file_without_extension = os.path.splitext(sound)[0]
+        # also copy the analysis files
+        analysis_file = source_file_without_extension+"_analysis.json"
+        analysis_file_path = os.path.join(data_path, analysis_file)
         # Copy the file to the target directory
         if os.path.exists(source_file_path):
             # check if the file already exists in the target directory
             if not os.path.exists(os.path.join(target_folder, sound)):
+                print(f"Copying {source_file_without_extension} to {target_folder}")
                 shutil.copy2(source_file_path, target_folder)
+            if not os.path.exists(os.path.join(analysis_folder, analysis_file)):
+                print(f"Copying {analysis_file_path} to {analysis_folder}")
+                shutil.copy2(analysis_file_path, analysis_folder)
         else:
             print(f"File {source_file_path} not found!")
 

@@ -130,9 +130,12 @@ def find_n_most_similar_for_a_file(used_files, id, df, metric=None, n=10, clss="
     else:
         return find_n_most_similar(id, df_copy, metric=metric, n=n, clss=clss)
         
-async def process_batch(all_files, used_files, df, metric=None, n=5, clss="stats", ops=None):
+async def process_batch(all_files, used_files, df, metric=None, n=5, clss="stats", id=None, ops=None):
     """Process a batch of sounds asynchronously."""
-    primary_file = all_files.pop()
+    if(id):
+        primary_file = id
+    else:
+        primary_file = all_files.pop()
     similar_files = find_n_most_similar_for_a_file(used_files=used_files, id=primary_file, df=df, metric=metric, n=n, clss=clss, ops=ops)
     print(f"Found {len(similar_files)} similar files for {primary_file}.")
     await copy_similar_to_folders(base_path, data_path, primary_file, similar_files)
@@ -143,20 +146,22 @@ async def process_batch(all_files, used_files, df, metric=None, n=5, clss="stats
 if(__name__ == "__main__"):
     
     parser = argparse.ArgumentParser(description='Process some arguments.')
-    parser.add_argument('-dt', '--data_path', type=str, required=True,
+    parser.add_argument('-d', '--data-path', type=str, required=True,
                         help='Path to the data directory')
     parser.add_argument('-id', '--identifier', type=str,
                         help='Identifier to test')
-    parser.add_argument('-bp', '--base_path', type=str, default='./similar_files',
+    parser.add_argument('-bp', '--base-path', type=str, default='./similar_files',
                         help='Base directory to store all similar file groups')
     parser.add_argument('-cls', '--class_to_analyse', type=str, default='stats',
                         help='Class to analyse')
-    parser.add_argument('-mt', '--metric_to_analyze', type=str, default=None,
+    parser.add_argument('-m', '--metric-to-analyze', type=str, default=None,
                         help='Metric to analyze')
-    parser.add_argument('--n', type=int, default=5,
+    parser.add_argument('-n', type=int, default=5,
                         help='Number of similar sounds to retrieve')
-    parser.add_argument('--ops', action='store_true', default=False,
+    parser.add_argument('-ops', action='store_true', default=False,
                         help='Use opetions file to fine tune the metric learning')
+    parser.add_argument('-nm', '--n-max', type=int, default=-1, 
+                        help='Max number of similar files to retrieve, Default: -1 (all)')
 
     args = parser.parse_args()
     data_path = os.path.abspath(args.data_path)
@@ -167,6 +172,7 @@ if(__name__ == "__main__"):
     n = args.n
     use_options_file = args.ops
     ops = None
+    n_max = args.n_max
     
     if(use_options_file):
         # Load the options yamle file from this directory
@@ -180,12 +186,13 @@ if(__name__ == "__main__"):
     df = pd.json_normalize(data, sep="_")
     
     all_files = set(df["id"].tolist())
+    if n_max == -1:
+        n_max = len(all_files)
     used_files = set()
     loop = asyncio.get_event_loop()
     
-    # while all_sounds and len(used_sounds) < 100:
-    while all_files:
-        loop.run_until_complete(process_batch(all_files=all_files, used_files=used_files, df=df, metric=metric_to_analyze, n=n, clss=class_to_analyse, ops=ops))
+    while all_files and len(used_files) < n_max:
+        loop.run_until_complete(process_batch(all_files=all_files, used_files=used_files, df=df, metric=metric_to_analyze, n=n, clss=class_to_analyse, id=identifier_to_test, ops=ops))
     
 
 
