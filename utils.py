@@ -97,7 +97,7 @@ async def copy_similar_to_folders(base_path, data_path, file_id, similar_files):
         else:
             print(f"File {source_file_path} not found!")
 
-        await asyncio.sleep(1)  # just to mimic some delay
+        await asyncio.sleep(0.002)  # just to mimic some delay
     print(f"Copied similar sounds for {file_id} to {target_folder}.")
     
     
